@@ -1,5 +1,7 @@
 langchain
+langchain-community
 chromadb
 openai
 sentence-transformers
 tiktoken
+pysqlite3-binary
