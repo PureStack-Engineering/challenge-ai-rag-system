@@ -1,17 +1,17 @@
 import os
 import openai
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import CharacterTextSplitter
+# --- CORRECCIONES DE IMPORTACIÓN PARA LANGCHAIN NUEVO ---
+from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import Chroma
-from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain.text_splitter import CharacterTextSplitter
+# ---------------------------------------------------------
 
 class RAGSystem:
     def __init__(self, knowledge_path):
         self.knowledge_path = knowledge_path
         self.vector_db = None
-        # TRUCO DEL CANDIDATO PRO:
-        # Usa un modelo de embeddings local y ligero para los tests.
-        # Esto evita errores de "Missing API Key" al hacer la ingesta/búsqueda.
+        # Usamos embeddings locales para evitar errores de API Key en el test
         self.embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
     def ingest(self):
@@ -23,11 +23,11 @@ class RAGSystem:
         loader = TextLoader(self.knowledge_path, encoding="utf-8")
         documents = loader.load()
 
-        # 2. Dividir en chunks (simulado)
+        # 2. Dividir en chunks
         text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=0)
         docs = text_splitter.split_documents(documents)
 
-        # 3. Crear Vector Store (en memoria para el test)
+        # 3. Crear Vector Store (en memoria)
         self.vector_db = Chroma.from_documents(
             documents=docs, 
             embedding=self.embedding_function,
@@ -40,33 +40,25 @@ class RAGSystem:
         if not self.vector_db:
             raise Exception("La base de datos no está inicializada. Ejecuta ingest() primero.")
         
-        # Realizamos la búsqueda por similitud
         results = self.vector_db.similarity_search(query, k=top_k)
-        
-        # Devolvemos solo el contenido del texto para simplificar el test
         return [doc.page_content for doc in results]
 
     def answer(self, query):
-        """
-        Genera una respuesta usando OpenAI.
-        NOTA: En el entorno de test, esta llamada será interceptada (mockeada).
-        """
-        # Contexto recuperado (opcional para el mock, pero buena práctica)
+        """Genera respuesta (Mockeada en el test)."""
         context_docs = self.retrieve(query)
         context_text = "\n".join(context_docs)
 
-        # Llamada estándar a OpenAI (la que el test espera ver)
-        # No necesitamos API Key real porque el test usa @patch
+        # Esta llamada fallaría sin API Key real, pero el test la intercepta (mock)
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": f"Usa este contexto: {context_text}"},
+                {"role": "system", "content": f"Contexto: {context_text}"},
                 {"role": "user", "content": query}
             ]
         )
         return response.choices[0].message.content
 
-# Bloque para ejecución manual si se desea probar localmente
+# Bloque para ejecución manual
 if __name__ == "__main__":
-    rag = RAGSystem("data/test_knowledge.txt")
-    # rag.ingest() ...
+    # Asegúrate de que existe data/test_knowledge.txt si lo corres en local
+    pass
