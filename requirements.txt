@@ -1,1 +1,10 @@
-# Añade tus dependencias aquí
+# Dependencias base sugeridas para PureStack Challenge
+langchain
+langchain-community
+langchain-text-splitters
+chromadb
+openai
+sentence-transformers
+tiktoken
+# Fix crítico para entornos Linux/GitHub Actions
+pysqlite3-binary
