@@ -1,17 +1,19 @@
 import os
 import openai
-# --- CORRECCIONES DE IMPORTACIÓN PARA LANGCHAIN NUEVO ---
+
+# --- IMPORTS ACTUALIZADOS (VERSIÓN 2024/2025) ---
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import SentenceTransformerEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-# ---------------------------------------------------------
+# Aquí estaba el fallo: ahora se importa desde langchain_text_splitters
+from langchain_text_splitters import CharacterTextSplitter
+# ------------------------------------------------
 
 class RAGSystem:
     def __init__(self, knowledge_path):
         self.knowledge_path = knowledge_path
         self.vector_db = None
-        # Usamos embeddings locales para evitar errores de API Key en el test
+        # Modelo local para evitar errores de API Key en los tests
         self.embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
     def ingest(self):
@@ -28,6 +30,7 @@ class RAGSystem:
         docs = text_splitter.split_documents(documents)
 
         # 3. Crear Vector Store (en memoria)
+        # Nota: Usamos la configuración por defecto de Chroma
         self.vector_db = Chroma.from_documents(
             documents=docs, 
             embedding=self.embedding_function,
@@ -38,7 +41,11 @@ class RAGSystem:
     def retrieve(self, query, top_k=1):
         """Busca en la base vectorial."""
         if not self.vector_db:
-            raise Exception("La base de datos no está inicializada. Ejecuta ingest() primero.")
+            # Intento de auto-recuperación si olvidaron llamar a ingest
+            try:
+                self.ingest()
+            except:
+                raise Exception("La base de datos no está inicializada. Ejecuta ingest() primero.")
         
         results = self.vector_db.similarity_search(query, k=top_k)
         return [doc.page_content for doc in results]
@@ -48,7 +55,6 @@ class RAGSystem:
         context_docs = self.retrieve(query)
         context_text = "\n".join(context_docs)
 
-        # Esta llamada fallaría sin API Key real, pero el test la intercepta (mock)
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -58,7 +64,5 @@ class RAGSystem:
         )
         return response.choices[0].message.content
 
-# Bloque para ejecución manual
 if __name__ == "__main__":
-    # Asegúrate de que existe data/test_knowledge.txt si lo corres en local
     pass
