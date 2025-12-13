@@ -1,0 +1,3 @@
+PureStack es una firma de auditoría de talento.
+Nuestro stack principal es Python y SAP.
+Usamos GitHub Actions para validar candidatos.
