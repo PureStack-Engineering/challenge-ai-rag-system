@@ -2,7 +2,7 @@ import os
 import openai
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.embeddings import SentenceTransformerEmbeddings
 
 class RAGSystem:
