@@ -18,8 +18,6 @@ Build a Python class that ingests a textual knowledge base and answers questions
 
 ---
 
-**Requirement:** Your solution must be inside the file `rag_system.py` and the class must be named `RAGSystem`.
-
 ### 🛠️ Tech Stack Requirements
 * **Language:** Python 3.10+
 * **Frameworks:** You are free to use **LangChain**, **LlamaIndex**, or raw Python code.
@@ -55,6 +53,8 @@ We will clone your repo and run the automated audit (`pytest`). We look for:
 ### 🚨 CRITICAL: Project Structure
 To ensure our **Automated Auditor** works correctly, you **MUST** follow this structure.
 We have provided a skeleton in `rag_system.py`.
+
+**Requirement:** Your solution must be inside the file `rag_system.py` and the class must be named `RAGSystem`.
 
 ```text
 /
