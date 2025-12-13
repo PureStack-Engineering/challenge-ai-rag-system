@@ -1,8 +1,1 @@
-langchain
-langchain-community
-langchain-text-splitters
-chromadb
-openai
-sentence-transformers
-tiktoken
-pysqlite3-binary
+# Añade tus dependencias aquí
