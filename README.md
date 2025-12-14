@@ -1,68 +1,83 @@
 # 🧠 PureStack AI Engineering Challenge: The RAG Protocol
 
-PureStack.es - Engineering. Validated by Code.
-
-### Context
-Welcome to the **PureStack Technical Validation Protocol**.
-This assessment is designed to audit your ability to build **AI-driven systems**, specifically Retrieval-Augmented Generation (RAG). We are not looking for "Prompt Engineers"; we are looking for **AI Engineers** who understand vector stores, embeddings, and retrieval logic.
-
-**⚠️ The Standard:** We expect clean, modular code that handles the full RAG pipeline: Ingestion → Embedding → Retrieval → Generation.
+**PureStack.es - Engineering Validation Protocol.**
+> *"We don't look for Prompt Engineers. We audit AI Engineers."*
 
 ---
 
-### 🎯 The Objective
-Build a Python class that ingests a textual knowledge base and answers questions about it using an LLM (OpenAI recommended) grounded in that data.
+### 📋 Context & Mission
+Welcome to the PureStack Technical Validation Protocol.
+This assessment is designed to audit your ability to build **Retrieval-Augmented Generation (RAG)** systems.
 
-**The Mission:**
-1.  **Ingest:** Read a text file, split it into chunks, and store embeddings in a Vector Database (ChromaDB recommended).
-2.  **Retrieve:** Given a user query, find the most relevant chunks.
-3.  **Generate:** Construct a prompt with the retrieved context and get an answer from the LLM.
+We are not looking for a 10-line script calling OpenAI. We are auditing your **architectural choices**, your understanding of **embeddings**, and your ability to apply **Software Engineering** principles to AI.
+
+### 🚦 Certification Levels (Choose your Difficulty)
+This challenge is scalable. Your seniority level will be determined by how far you take your solution. Please state in your Pull Request which level you are aiming for.
+
+#### 🥉 Level 3: Essential / Mid-Level
+* **Focus:** Core Functionality.
+* **Requirement:** Implement the `RAGSystem` class to pass the automated tests (`pytest`).
+* **Tasks:**
+    1.  **Ingestion:** Read a text file and split it into chunks.
+    2.  **Vector Store:** Store embeddings (using ChromaDB, FAISS, or in-memory).
+    3.  **Simple RAG:** Retrieve relevant context and generate an answer using an LLM.
+* **Deliverable:** Clean code that works and gets the **GREEN** light on GitHub Actions.
+
+#### 🥈 Level 2: Pro / Senior
+* **Focus:** Robustness, Traceability, and "Clean Code".
+* **Requirement:** Everything in Level 3 + **Citations & Hallucination Management**.
+* **Extra Tasks:**
+    1.  **Source Citations:** The system must not only answer but indicate *where* in the text the info came from (e.g., `[Source: Chunk 2]`).
+    2.  **Graceful Fallback:** If the answer is NOT in the provided text, the system must explicitly state "I don't have enough information", preventing hallucinations.
+* **Deliverable:** Defensive coding logic and proper exception handling.
+
+#### 🥇 Level 1: Elite / Architect
+* **Focus:** System Engineering, API Exposure & Optimization.
+* **Requirement:** Everything above + **API Wrapper & Search Strategy**.
+* **Extra Tasks:**
+    1.  **FastAPI Wrapper:** Expose your `RAGSystem` class as a functional REST API (`/ask`, `/ingest`).
+    2.  **Retrieval Optimization:** Implement a **Hybrid Search** strategy (Keyword + Semantic) or document a significant improvement in retrieval (e.g., Re-ranking, Dynamic Chunking).
+* **Deliverable:** A production-ready system, scalable and well-documented.
 
 ---
 
-### 🛠️ Tech Stack Requirements
+### 🛠️ Tech Stack & Constraints
 * **Language:** Python 3.10+
-* **Frameworks:** You are free to use **LangChain**, **LlamaIndex**, or raw Python code.
-* **Vector DB:** **ChromaDB** (preferred for simplicity), FAISS, or any in-memory store.
-* **LLM:** OpenAI (`gpt-3.5` or `gpt-4`).
-    * *Note:* The automated tests in this repo use **Mocking**. They verify your logic without needing a real API Key. However, for your local development, you will need your own key.
-
-### 🧪 Evaluation Criteria (How we audit you)
-We will clone your repo and run the automated audit (`pytest`). We look for:
-
-* **Green Lights:** Your code must pass the provided GitHub Actions workflow.
-* **Retrieval Accuracy:** Does your system find the correct text chunk for a specific query?
-* **Code Quality:** Clean separation of concerns (Ingestion vs. Querying).
-* **Dependency Management:** Your `requirements.txt` must work in a fresh environment.
-
-### 🚀 Getting Started
-1. **Fork** this repository.
-2. Install dependencies: `pip install -r requirements.txt`.
-3. **Implement your solution** inside `rag_system.py`. You need to complete:
-    * `ingest()`
-    * `retrieve(query)`
-    * `answer(query)`
-4. Run the tests locally: `pytest`.
-5. Submit via Pull Request.
-
-### 📂 Bonus Points (Elite Level)
-* Implement **Hybrid Search** (Keyword + Semantic).
-* Add **Source Citations** to the final answer (e.g., "Source: page 1").
-* Wrap the system in a **FastAPI** endpoint.
+* **Allowed Frameworks:** LangChain, LlamaIndex, or raw Python (Your choice demonstrates your criteria).
+* **Vector Database:** ChromaDB (Preferred for simplicity), FAISS, or in-memory implementation.
+* **LLM:** OpenAI (`gpt-3.5` / `gpt-4`).
+    * *Note:* The automated tests in this repo use **Mocking**. They validate your logic without consuming real API credits. However, for local development, you will need your own API Key.
 
 ---
 
-### 🚨 CRITICAL: Project Structure
-To ensure our **Automated Auditor** works correctly, you **MUST** follow this structure.
-We have provided a skeleton in `rag_system.py`.
+### 🚀 Execution Instructions
 
-**Requirement:** Your solution must be inside the file `rag_system.py` and the class must be named `RAGSystem`.
+1.  **Fork** this repository.
+2.  Install dependencies: `pip install -r requirements.txt`.
+3.  **Implement your solution** inside `rag_system.py`. The `RAGSystem` class structure is mandatory for the automated auditor.
+4.  Run local tests: `pytest`.
+5.  Submit your **Pull Request** stating the level achieved (1, 2, or 3).
+
+### 🧪 Evaluation Criteria (PureStack Audit)
+
+| Criteria | Weight | Audit Focus |
+| :--- | :--- | :--- |
+| **Functionality** | 30% | Do tests pass? Does it answer correctly? |
+| **Code Quality** | 30% | Separation of concerns (Ingest vs. Query). Type Hinting. |
+| **RAG Logic** | 25% | How do you handle Embeddings? Is retrieval efficient? |
+| **Documentation** | 15% | Clarity in README and commits (Crucial for Level 1 & 2). |
+
+---
+
+### 🚨 Project Structure (DO NOT MODIFY)
+To ensure compatibility with our CI/CD systems, keep this structure intact:
 
 ```text
 /
 ├── .github/workflows/   # PureStack Audit System (DO NOT TOUCH)
 ├── tests/               # Validation Tests (Mocked LLM calls)
-├── data/                # Place your test documents here
-├── rag_system.py        # <--- YOUR CODE GOES HERE (Class RAGSystem)
-├── requirements.txt     # <--- Add your dependencies here
+├── data/                # Test Documents
+├── rag_system.py        # <--- YOUR CODE HERE (Class RAGSystem)
+├── main_api.py          # <--- (Optional) Only for Level 1 (FastAPI)
+├── requirements.txt     # <--- Add your libraries here
 └── README.md
