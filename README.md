@@ -1,5 +1,7 @@
 # 🧠 PureStack AI Engineering Challenge: The RAG Protocol
 
+PureStack.es - Engineering. Validated by Code.
+
 ### Context
 Welcome to the **PureStack Technical Validation Protocol**.
 This assessment is designed to audit your ability to build **AI-driven systems**, specifically Retrieval-Augmented Generation (RAG). We are not looking for "Prompt Engineers"; we are looking for **AI Engineers** who understand vector stores, embeddings, and retrieval logic.
