@@ -1,3 +1,5 @@
-PureStack es una firma de auditoría de talento.
-Nuestro stack principal es Python y SAP.
-Usamos GitHub Actions para validar candidatos.
+PureStack Engineering Principles:
+1. Validated by Code: We do not believe in CVs or theoretical interviews. We believe in GitHub repositories and functional code.
+2. Asynchronous Audits: Our process is respectful of the candidate's time. We use automated pipelines to verify technical skills.
+3. Elite Standards: We filter for the top 1% of talent in Python, SAP, and Cloud Engineering.
+The RAG protocol is designed to test Retrieval Augmented Generation capabilities using Vector Databases.
