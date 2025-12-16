@@ -61,7 +61,7 @@ State your target level in your Pull Request.
 1.  **Fork** this repository.
 2.  Install dependencies: `pip install -r requirements.txt`.
 3.  **Implement your solution** inside `rag_system.py`.
-    * *Constraint:* You MUST keep the class name `RAGSystem` and the method `query(user_input)` for tests to work.
+    * *Constraint:* You MUST keep the class name `RAGSystem` and the method `answer(query)` for tests to work.
 4.  Run local tests: `pytest`.
 5.  Submit your **Pull Request**.
 
