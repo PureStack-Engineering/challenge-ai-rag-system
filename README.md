@@ -70,14 +70,17 @@ This challenge is scalable. Your seniority level will be determined by how far y
 ---
 
 ### 🚨 Project Structure (DO NOT MODIFY)
-To ensure compatibility with our CI/CD systems, keep this structure intact:
+To ensure our **Automated Auditor** works, keep this structure intact:
 
 ```text
 /
 ├── .github/workflows/   # PureStack Audit System (DO NOT TOUCH)
-├── tests/               # Validation Tests (Mocked LLM calls)
-├── data/                # Test Documents
+├── tests/
+│   ├── __init__.py
+│   └── test_rag.py      # Validation Tests (Mocked LLM calls)
+├── data/
+│   └── test_knowledge.txt # Test Document (Source of Truth)
 ├── rag_system.py        # <--- YOUR CODE HERE (Class RAGSystem)
-├── main_api.py          # <--- (Optional) Only for Level 1 (FastAPI)
+├── main_api.py          # <--- Skeleton for Level 1 (FastAPI)
 ├── requirements.txt     # <--- Add your libraries here
 └── README.md
