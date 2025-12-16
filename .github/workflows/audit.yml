@@ -1,47 +1,89 @@
 name: PureStack Technical Audit
-# Se ejecuta cuando alguien hace push o abre un Pull Request
 on: [push, pull_request]
 
 jobs:
-  audit-code:
+  audit-candidate:
+    name: 🕵️ PureStack Auditor
     runs-on: ubuntu-latest
-    
-    steps:
-    # 1. Descargar el código del candidato
-    - uses: actions/checkout@v3
+    timeout-minutes: 5  # Prevents infinite loops if candidate code hangs
 
-    # 2. Configurar Python
-    - uses: actions/setup-python@v4
+    steps:
+    # 1. Checkout Code
+    - uses: actions/checkout@v4
+
+    # 2. Setup Python
+    - uses: actions/setup-python@v5
       with:
         python-version: "3.10"
+        cache: 'pip' # Speeds up future audits by caching dependencies
 
-    # 3. INSTALAR DEPENDENCIAS (El paso crítico modificado)
-    - name: Install Dependencies
+    # 3. 🛡️ STRUCTURAL AUDIT (Fail Fast)
+    # Before installing anything, we verify if the candidate followed basic rules.
+    - name: 📂 Audit Structure (Sanity Check)
+      run: |
+        echo "Running Structural Audit..."
+        MISSING=0
+        
+        if [ ! -f "rag_system.py" ]; then 
+          echo "❌ CRITICAL: 'rag_system.py' is missing."
+          MISSING=1
+        fi
+        
+        if [ ! -f "data/test_knowledge.txt" ]; then 
+          echo "❌ CRITICAL: 'data/test_knowledge.txt' is missing."
+          MISSING=1
+        fi
+
+        if [ $MISSING -eq 1 ]; then
+          echo "🚫 Audit aborted due to structural violations."
+          exit 1
+        fi
+        echo "✅ Structure looks good."
+
+    # 4. INSTALL DEPENDENCIES (Correct Order)
+    - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        # Instalamos nuestras herramientas de auditoría + librerías de IA necesarias para el test
-        pip install pytest flake8 langchain chromadb openai tiktoken sentence-transformers
-        # Si el candidato tiene un requirements.txt, lo instalamos también
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+        # A. Install CANDIDATE dependencies first (The project's source of truth)
+        if [ -f requirements.txt ]; then 
+          pip install -r requirements.txt
+        else
+          echo "⚠️ Warning: No requirements.txt found. Trying to proceed with default stack..."
+        fi
 
-    # 4. Linter (Limpieza de código)
-    - name: Lint (Clean Code)
-      # Esto busca errores de sintaxis graves (E9, F63, etc.)
+        # B. Install AUDIT TOOLS (Our source of truth)
+        # pytest-mock is vital to simulate OpenAI without paying/using real keys
+        pip install pytest pytest-mock flake8 httpx
+
+    # 5. STATIC CODE ANALYSIS (Linting)
+    - name: 🧹 Static Code Analysis (Lint)
+      # We check for syntax errors and undefined variables, but we are lenient on style
       run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    # 5. Ejecutar los Tests
-    - name: Run Tests
+    # 6. RUN TESTS (Logic Audit)
+    - name: 🧪 Run Logic Tests
       id: run_tests
-      # Ejecuta pytest y busca tests en la carpeta "tests/" o archivos que empiecen por "test_"
-      run: pytest --verbose
-      continue-on-error: true
-
-    # 6. Veredicto Final
-    - name: Verdict
+      env:
+        # 🔑 DUMMY KEY: Vital so libraries (like OpenAI/LangChain) don't crash on import
+        OPENAI_API_KEY: "sk-purestack-mock-key-do-not-use-real"
       run: |
-        if [ ${{ steps.run_tests.outcome }} == 'success' ]; then
-          echo "✅ PURESTACK AUDIT: PASSED (CODE AUDITED)."
+        # Run pytest with detailed output (-v)
+        pytest tests/ -v
+
+    # 7. FINAL VERDICT (UX for the Candidate)
+    - name: 🏁 Final Verdict
+      if: always() # Runs even if tests fail, to provide feedback
+      run: |
+        if [ "${{ steps.run_tests.outcome }}" == "success" ]; then
+          echo "#######################################################"
+          echo "✅ PURESTACK CERTIFICATION: PASSED"
+          echo "The candidate demonstrates solid architectural logic."
+          echo "#######################################################"
         else
-          echo "❌ FAILED. The code did not pass the technical validation."
+          echo "#######################################################"
+          echo "❌ AUDIT FAILED"
+          echo "Please review the test logs above to fix the logic."
+          echo "#######################################################"
           exit 1
         fi
