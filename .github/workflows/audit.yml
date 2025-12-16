@@ -71,19 +71,33 @@ jobs:
         # Run pytest with detailed output (-v)
         pytest tests/ -v
 
-    # 7. FINAL VERDICT (UX for the Candidate)
+   # 7. FINAL VERDICT (UX for the Candidate)
     - name: 🏁 Final Verdict
-      if: always() # Runs even if tests fail, to provide feedback
+      if: always() # Se ejecuta siempre para dar feedback
       run: |
-        if [ "${{ steps.run_tests.outcome }}" == "success" ]; then
+        # Capturamos el resultado del paso de tests
+        TEST_OUTCOME="${{ steps.run_tests.outcome }}"
+
+        if [ "$TEST_OUTCOME" == "success" ]; then
           echo "#######################################################"
           echo "✅ PURESTACK CERTIFICATION: PASSED"
           echo "The candidate demonstrates solid architectural logic."
           echo "#######################################################"
+          exit 0
+        
+        elif [ "$TEST_OUTCOME" == "skipped" ]; then
+          echo "#######################################################"
+          echo "⛔ AUDIT ABORTED EARLY"
+          echo "The tests were SKIPPED because a previous step failed."
+          echo "Check 'Structure Audit', 'Install Dependencies', or 'Lint' steps."
+          echo "#######################################################"
+          exit 1
+        
         else
           echo "#######################################################"
-          echo "❌ AUDIT FAILED"
-          echo "Please review the test logs above to fix the logic."
+          echo "❌ LOGIC TESTS FAILED"
+          echo "The architecture is valid, but the logic did not pass."
+          echo "Please review the 'Run Logic Tests' logs above."
           echo "#######################################################"
           exit 1
         fi
