@@ -12,41 +12,47 @@ This assessment is designed to audit your ability to build **Retrieval-Augmented
 We are not looking for a 10-line script calling OpenAI. We are auditing your **architectural choices**, your understanding of **embeddings**, and your ability to apply **Software Engineering** principles to AI.
 
 ### 🚦 Certification Levels (Choose your Difficulty)
-This challenge is scalable. Your seniority level will be determined by how far you take your solution. Please state in your Pull Request which level you are aiming for.
+State your target level in your Pull Request.
 
 #### 🥉 Level 3: Essential / Mid-Level
 * **Focus:** Core Functionality.
-* **Requirement:** Implement the `RAGSystem` class to pass the automated tests (`pytest`).
+* **Requirement:** Implement the `RAGSystem` class to pass the automated tests.
 * **Tasks:**
-    1.  **Ingestion:** Read a text file and split it into chunks.
-    2.  **Vector Store:** Store embeddings (using ChromaDB, FAISS, or in-memory).
-    3.  **Simple RAG:** Retrieve relevant context and generate an answer using an LLM.
-* **Deliverable:** Clean code that works and gets the **GREEN** light on GitHub Actions.
+    1.  **Ingestion:** Read `data/test_knowledge.txt` and split it into chunks.
+    2.  **Vector Store:** Store embeddings (using ChromaDB, FAISS, or simple in-memory vectors).
+    3.  **Retrieval:** Implement the `query(question)` method to retrieve context and generate an answer.
+* **Deliverable:** A script that passes the **Mocked Tests** (Green light on GitHub Actions).
 
 #### 🥈 Level 2: Pro / Senior
-* **Focus:** Robustness, Traceability, and "Clean Code".
-* **Requirement:** Everything in Level 3 + **Citations & Hallucination Management**.
+* **Focus:** Robustness & Hallucination Management.
+* **Requirement:** Everything in Level 3 + **Defensive AI**.
 * **Extra Tasks:**
-    1.  **Source Citations:** The system must not only answer but indicate *where* in the text the info came from (e.g., `[Source: Chunk 2]`).
-    2.  **Graceful Fallback:** If the answer is NOT in the provided text, the system must explicitly state "I don't have enough information", preventing hallucinations.
-* **Deliverable:** Defensive coding logic and proper exception handling.
+    1.  **Source Tracking:** The system must indicate *which* chunk provided the answer.
+    2.  **Hallucination Control:** If the answer is NOT in the text, the system must return a specific fallback message (e.g., "Information not found in context") instead of inventing facts.
+* **Deliverable:** Defensive logic handled within the `RAGSystem` class.
 
 #### 🥇 Level 1: Elite / Architect
-* **Focus:** System Engineering, API Exposure & Optimization.
-* **Requirement:** Everything above + **API Wrapper & Search Strategy**.
+* **Focus:** API & Systems Engineering.
+* **Requirement:** Everything above + **REST API**.
 * **Extra Tasks:**
-    1.  **FastAPI Wrapper:** Expose your `RAGSystem` class as a functional REST API (`/ask`, `/ingest`).
-    2.  **Retrieval Optimization:** Implement a **Hybrid Search** strategy (Keyword + Semantic) or document a significant improvement in retrieval (e.g., Re-ranking, Dynamic Chunking).
-* **Deliverable:** A production-ready system, scalable and well-documented.
+    1.  **FastAPI Wrapper:** Implement `main_api.py` to expose endpoints:
+        * `POST /ingest`: Triggers document processing.
+        * `POST /ask`: Accepts `{"question": "..."}` and returns the answer.
+    2.  **Optimization:** Implement a generic Interface for the LLM to allow swapping models easily (e.g., swapping OpenAI for a local Llama model).
+* **Deliverable:** A production-ready API structure.
 
 ---
 
 ### 🛠️ Tech Stack & Constraints
 * **Language:** Python 3.10+
-* **Allowed Frameworks:** LangChain, LlamaIndex, or raw Python (Your choice demonstrates your criteria).
-* **Vector Database:** ChromaDB (Preferred for simplicity), FAISS, or in-memory implementation.
+* **Allowed Frameworks:** LangChain, LlamaIndex, or raw Python (Your choice).
+* **Vector Database:** ChromaDB (Preferred), FAISS, or In-Memory.
 * **LLM:** OpenAI (`gpt-3.5` / `gpt-4`).
-    * *Note:* The automated tests in this repo use **Mocking**. They validate your logic without consuming real API credits. However, for local development, you will need your own API Key.
+
+> **⚠️ IMPORTANT: The Automated Auditor (Tests)**
+> The tests in this repository use **MOCKING**. They do *not* make real calls to OpenAI to avoid costs during evaluation.
+> * **Locally:** You will need your own `OPENAI_API_KEY` to verify it works.
+> * **On GitHub:** The tests check if your *logic* calls the LLM correctly, not the actual LLM output.
 
 ---
 
@@ -54,33 +60,33 @@ This challenge is scalable. Your seniority level will be determined by how far y
 
 1.  **Fork** this repository.
 2.  Install dependencies: `pip install -r requirements.txt`.
-3.  **Implement your solution** inside `rag_system.py`. The `RAGSystem` class structure is mandatory for the automated auditor.
+3.  **Implement your solution** inside `rag_system.py`.
+    * *Constraint:* You MUST keep the class name `RAGSystem` and the method `query(user_input)` for tests to work.
 4.  Run local tests: `pytest`.
-5.  Submit your **Pull Request** stating the level achieved (1, 2, or 3).
+5.  Submit your **Pull Request**.
 
 ### 🧪 Evaluation Criteria (PureStack Audit)
 
 | Criteria | Weight | Audit Focus |
 | :--- | :--- | :--- |
-| **Functionality** | 30% | Do tests pass? Does it answer correctly? |
-| **Code Quality** | 30% | Separation of concerns (Ingest vs. Query). Type Hinting. |
-| **RAG Logic** | 25% | How do you handle Embeddings? Is retrieval efficient? |
-| **Documentation** | 15% | Clarity in README and commits (Crucial for Level 1 & 2). |
+| **Architecture** | 35% | Separation of Ingestion vs Querying. |
+| **Code Quality** | 25% | Type hinting, error handling, clean imports. |
+| **RAG Logic** | 25% | Chunking strategy and retrieval efficiency. |
+| **Testing** | 15% | Does it pass the CI/CD pipeline? |
 
 ---
 
-### 🚨 Project Structure (DO NOT MODIFY)
-To ensure our **Automated Auditor** works, keep this structure intact:
+### 🚨 Project Structure (Strict)
+To ensure our **Automated Auditor** works, keep this structure:
 
 ```text
 /
-├── .github/workflows/   # PureStack Audit System (DO NOT TOUCH)
-├── tests/
-│   ├── __init__.py
-│   └── test_rag.py      # Validation Tests (Mocked LLM calls)
+├── .github/workflows/   # PureStack Audit System (CI Pipeline)
 ├── data/
-│   └── test_knowledge.txt # Test Document (Source of Truth)
+│   └── test_knowledge.txt # Source of Truth (The document to "learn")
+├── tests/
+│   └── test_rag.py      # Validation Tests (Mocked)
 ├── rag_system.py        # <--- YOUR CODE HERE (Class RAGSystem)
 ├── main_api.py          # <--- Skeleton for Level 1 (FastAPI)
-├── requirements.txt     # <--- Add your libraries here
+├── requirements.txt     # <--- Dependencies
 └── README.md
