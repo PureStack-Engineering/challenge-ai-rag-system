@@ -1,8 +1,11 @@
+
 """
 🚀 LEVEL 1 CHALLENGE: FastAPI Wrapper
 -------------------------------------
-If you are aiming for the Elite Level, you must uncomment this code 
-and implement the API endpoints to expose your RAGSystem.
+ONLY required if you are aiming for the Elite Level.
+If you are doing Level 2 or 3, you can ignore this file.
+...
+"""
 
 Requirements:
 1. Expose a POST /ingest endpoint to upload documents.
