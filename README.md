@@ -8,7 +8,7 @@
 > 1. Click the green **"Use this template"** button (top right) -> **"Create a new repository"**.
 > 2. Select **"Private"** visibility (Crucial to prevent spoilers).
 > 3. Clone your new private repository to your machine.
-> 4. Once finished, invite user **[JLMoraCastilla](https://github.com/JLMoraCastilla)]** as a collaborator to review.
+> 4. Once finished, invite user **[JLMoraCastilla](https://github.com/JLMoraCastilla)** as a collaborator to review.
 >
 > ⚠️ **DO NOT FORK** this repository directly, as it will force your solution to be public.
 
