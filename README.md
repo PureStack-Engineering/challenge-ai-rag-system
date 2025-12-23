@@ -3,6 +3,15 @@
 **PureStack.es - Engineering Validation Protocol.**
 > *"We don't look for Prompt Engineers. We audit AI Engineers."*
 
+> [!TIP]
+> **HOW TO START THIS CHALLENGE**
+> 1. Click the green **"Use this template"** button (top right) -> **"Create a new repository"**.
+> 2. Select **"Private"** visibility (Crucial to prevent spoilers).
+> 3. Clone your new private repository to your machine.
+> 4. Once finished, invite user **[JLMoraCastilla](https://github.com/JLMoraCastilla)]** as a collaborator to review.
+>
+> ⚠️ **DO NOT FORK** this repository directly, as it will force your solution to be public.
+
 ---
 
 ### 📋 Context & Mission
@@ -58,12 +67,12 @@ State your target level in your Pull Request.
 
 ### 🚀 Execution Instructions
 
-1.  **Fork** this repository.
+1.  **Use the Template:** Create your **Private Repository** using the instructions at the top of this file.
 2.  Install dependencies: `pip install -r requirements.txt`.
 3.  **Implement your solution** inside `rag_system.py`.
     * *Constraint:* You MUST keep the class name `RAGSystem` and the method `answer(query)` for tests to work.
 4.  Run local tests: `pytest`.
-5.  Submit your **Pull Request**.
+5.  Submit your **Pull Request** in your private repo and invite the reviewer.
 
 ### 🧪 Evaluation Criteria (PureStack Audit)
 
@@ -90,3 +99,18 @@ To ensure our **Automated Auditor** works, keep this structure:
 ├── main_api.py          # <--- Skeleton for Level 1 (FastAPI)
 ├── requirements.txt     # <--- Dependencies
 └── README.md
+```
+---
+## ⚖️ License & Legal Notice
+
+**© 2025 PureStack.es. All Rights Reserved.**
+
+This repository is "Source Available" for **evaluation purposes only**.
+
+* **Public viewing:** Allowed.
+* **Commercial use:** ❌ Strictly Prohibited.
+* **Redistribution:** ❌ Strictly Prohibited.
+
+By accessing this material, you agree to the terms in `LICENSE.md`.
+
+> **🚫 Publishing solutions to public repositories is a violation of these terms.**
