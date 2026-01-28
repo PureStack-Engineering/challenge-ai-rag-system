@@ -1,47 +1,47 @@
 import os
-# Puedes importar aquí las librerías que necesites (LangChain, Chroma, OpenAI, etc.)
+
 
 class RAGSystem:
     """
-    Clase principal para el sistema RAG de PureStack.
-    El candidato debe completar los métodos ingest, retrieve y answer.
+    Main class for the PureStack RAG system.
+    The candidate must complete the ingest, retrieve, and answer methods.
     """
 
     def __init__(self, knowledge_path):
         """
-        Inicializa el sistema.
-        :param knowledge_path: Ruta al archivo de texto con el conocimiento base.
+        Initializes the system.
+        :param knowledge_path: Path to the text file containing the base knowledge.
         """
         self.knowledge_path = knowledge_path
-        # TODO: Inicializa aquí tu base de datos vectorial y tus embeddings
+      
         pass
 
     def ingest(self):
         """
-        Fase 1: Ingesta
-        Debe cargar el archivo de texto, dividirlo en chunks y guardarlo en la vector store.
+        Phase 1: Ingestion
+        Must load the text file, split it into chunks, and save it into the vector store.
         """
-        # TODO: Implementar lógica de ingesta
-        raise NotImplementedError("Debes implementar el método ingest().")
+       
+        raise NotImplementedError("You must implement the ingest() method.")
 
     def retrieve(self, query, top_k=1):
         """
-        Fase 2: Recuperación
-        Debe buscar los documentos más relevantes para la query.
-        :return: Lista de strings con el contenido de los documentos recuperados.
+        Phase 2: Retrieval
+        Must search for the most relevant documents for the query.
+        :return: List of strings with the content of the retrieved documents.
         """
-        # TODO: Implementar lógica de búsqueda
+    
         return []
 
     def answer(self, query):
         """
-        Fase 3: Generación
-        Debe usar un LLM (OpenAI recomendado) para responder la pregunta usando el contexto recuperado.
-        :return: String con la respuesta final.
+        Phase 3: Generation
+        Must use an LLM (OpenAI recommended) to answer the question using the retrieved context.
+        :return: String with the final answer.
         """
-        # TODO: Implementar lógica de RAG (Contexto + LLM)
-        return "Respuesta pendiente de implementación."
+    
+        return "Answer pending implementation."
 
-# Bloque para pruebas manuales del candidato
+# Block for candidate's manual testing
 if __name__ == "__main__":
     pass
