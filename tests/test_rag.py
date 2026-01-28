@@ -3,19 +3,15 @@ import os
 import sys
 from unittest.mock import patch, MagicMock
 
-# --- HACK PARA GITHUB ACTIONS (LINUX) ---
-# ChromaDB necesita SQLite > 3.35. GitHub a veces tiene versiones viejas.
-# Esto fuerza a usar la versión binaria moderna.
 try:
     __import__('pysqlite3')
     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 except ImportError:
-    pass # Si estamos en local (Windows/Mac) y no tenemos pysqlite3, seguimos normal.
+    pass 
 
-# --- CONFIGURACIÓN DEL ENTORNO ---
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Intentamos importar la solución del candidato
 try:
     from rag_system import RAGSystem
 except ImportError:
@@ -24,7 +20,7 @@ except ImportError:
     except ImportError:
         pytest.fail("❌ No se encontró la clase 'RAGSystem'.")
 
-# --- DATOS DE PRUEBA ---
+
 TEST_KNOWLEDGE_FILE = "test_knowledge.txt"
 TEST_CONTENT = """
 PureStack es una firma de auditoría de talento técnico.
@@ -47,7 +43,7 @@ def rag_instance():
 
     if os.path.exists(TEST_KNOWLEDGE_FILE):
         os.remove(TEST_KNOWLEDGE_FILE)
-    # Limpieza de Chroma local si se crea carpeta
+
     if os.path.exists("chroma_db"):
         import shutil
         shutil.rmtree("chroma_db", ignore_errors=True)
@@ -72,27 +68,24 @@ def test_retrieval_logic(rag_instance):
         pytest.fail("❌ Retrieval vacío.")
         
     top_result = str(results[0])
-    # Hacemos la validación más flexible (case insensitive)
+
     assert "retos" in top_result.lower() or "github" in top_result.lower(), \
         f"❌ Retrieval fallido. Recibido: {top_result}"
 
 @patch('openai.ChatCompletion.create')
 def test_generation_mocked(mock_openai, rag_instance):
-    # Mock de respuesta
+
     mock_response = MagicMock()
     mock_response.choices[0].message.content = "PureStack valida con retos."
     mock_openai.return_value = mock_response
 
     rag_instance.ingest()
     
-    # Mock de retrieval interno si el candidato usa OpenAI en el answer
-    # (Esto evita errores si el candidato no tiene API Key real ni para el embedding de la pregunta)
     with patch.object(rag_instance, 'retrieve', return_value=["PureStack valida con retos."]):
         try:
             respuesta = rag_instance.answer("¿Qué hace PureStack?")
         except Exception as e:
-            # Si falla aquí suele ser por falta de API Key aunque esté mockeado,
-            # pero con el patch anterior debería aguantar.
+ 
             pytest.fail(f"❌ Fallo en answer(): {e}")
 
     assert "PureStack" in respuesta
